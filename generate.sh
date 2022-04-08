@@ -9,5 +9,4 @@ for version in $versions
 do
         version_hash=$(curl -sL https://cdn.lucee.org/$version.jar | sha256sum)
         echo "$version|$version_hash"
-        break
 done
