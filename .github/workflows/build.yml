@@ -28,7 +28,7 @@ jobs:
       - name: Run hashes
         id: run_hashes
         run: |
-          ./generate.sh > lucee-version-hashes.txt
+          bash ./generate.sh > lucee-version-hashes.txt
           echo ::set-output name=release_name::"$(date +%Y-%m-%d)"
       - name: Create Release
         id: create_release
