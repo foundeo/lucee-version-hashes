@@ -26,5 +26,28 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Run hashes
+        id: run_hashes
         run: |
-          ./generate
+          ./generate > lucee-version-hashes.txt
+          echo ::set-output name=release_name::"$(date +%Y-%m-%d)"
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.run_hashes.outputs.release_name }}
+          release_name: ${{ steps.run_hashes.outputs.release_name }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./lucee-version-hashes.txt
+          asset_name: lucee-version-hashes.txt
+          asset_content_type: text/plain
+
